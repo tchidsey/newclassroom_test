@@ -20,5 +20,110 @@ Test verify result count for top value
 Test missing payload
 Test missing manditory values payload
 
+Defects/Bugs
+
+1. Mandatory fields for the payload are not displaying an error when leaving the field blank.
+
+I have an automated test that verifies the mandatory fields should display an error if you leave items out. When the test was executed it was expecting a 400 error but we are still getting a 200 Success
+Automated test:  test_missing_mandatory_values_payload
+Endpoint: "https://census-toy.nceng.net/prod/toy-census"
+Payload: 
+ payload = {
+            "actionType": "",
+            "top": 50,
+            "users": [
+                {
+                    "gender": "male",
+                    "name": {
+                        "title": "",
+                        "first": "",
+                        "last": ""
+                    },
+                    "location": {
+                        "street": "",
+                        "city": "",
+                        "state": "",
+                        "postcode": 3294
+                    },
+                    "email": "",
+                    "login": {
+                        "username": "",
+                        "password": "aaaaa",
+                        "salt": "fYBp4g4a",
+                        "md5": "",
+                        "sha1": "",
+                        "sha256": ""
+                    },
+                    "dob": "1956-09-17 02:13:36",
+                    "registered": "2009-05-03 14:40:51",
+                    "phone": "00-3540-6154",
+                    "cell": "0498-678-691",
+                    "id": {
+                        "name": "TFN",
+                        "value": "377488473"
+                    },
+                    "picture": {
+                        "large": "https://randomuser.me/api/portraits/women/38.jpg",
+                        "medium": "https://randomuser.me/api/portraits/med/women/38.jpg",
+                        "thumbnail": "https://randomuser.me/api/portraits/thumb/women/38.jpg"
+                    },
+                    "nat": "AU"
+                }
+            ]
+        }
+
+Response: Success 200
+
+Reproduction steps:
+1. Make a request to the https://census-toy.nceng.net/prod/toy-census edpoint with "actionType" empty
+2. Send off the request with a payload and missing actionType value
+3. Verify the response comes back 
+
+Expect: The response should come back with a 400 error and some message for the user to know they are missing a field
+
+Actual: The reponse comes back as a success and now error
 
 
+
+
+2. Sending in a request with no or an empty payload still returns a success and 200 status
+
+I have an automated test that sends in am empty payload to verify and error status and message are displayed. When the test sends off the payload, the reponse comes back as a success.
+
+Payload: {}
+Response: Success 200 status
+
+Reproduction steps:
+1. Make a request to the https://census-toy.nceng.net/prod/toy-census edpoint with an empty payload
+2. Send off the request with a payload and missing actionType value
+3. Verify the response comes back 
+
+Expect: The response should come back with a 400 error and some message for the user to know they are missing a field or payload
+
+Actual: The reponse comes back as a success and now error
+
+
+3. While developing the test to verify the 'top' sort parameter, I noticed this value is not changing the output of the response. This value seems to be ignored at this time.
+
+Payload:  payload = {
+            "actionType": "CountByGender",
+            "top" : str(num),
+            "users": [{"gender": gender} for gender in self.genders]
+            
+        }
+        
+ Response: [
+    {
+        "name": "AU",
+        "value": 1
+    }
+]
+
+Reproduction:
+1. Make a request to the https://census-toy.nceng.net/prod/toy-census edpoint with 'top' given some numerical value
+2. Send off the request with a payload and missing actionType value
+3. Verify the response comes back 
+
+Expect: The response should come back with a list of values matching the count given for 'top'
+
+Actual: The reponse comes back as a single item
