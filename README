@@ -1,0 +1,22 @@
+pip install requests
+requests                   2.28.2
+
+To run the test
+python -m unittest
+
+
+I used Python and the unittest framework to make api calls to the endpoint. I used a library that needs to be installed to make http request. I chose this as it is pretty quick to bring up some api test that can be used right away. It is one of the languages that was with in the description so I wanted to create something in an in house language. Python is quickly cathing on in the QA world for automation.
+
+
+I have 7 test:
+
+Test the count by gender
+Test the count by country
+Test count password complexity_non alpha
+Test count password comlexity alpha characters
+Test verify result count for top value
+Test missing payload
+Test missing manditory values payload
+
+
+
